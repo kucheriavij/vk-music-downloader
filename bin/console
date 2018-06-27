@@ -37,3 +37,4 @@ if ($debug) {
 $kernel = new Kernel($env, $debug);
 $application = new Application($kernel);
 $application->run($input);
+$application->add(new \App\Command\DownloadCommand());

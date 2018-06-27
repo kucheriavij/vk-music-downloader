@@ -37,7 +37,7 @@ trait Http
         $request = new GuzzleHttp\Client($this->requestOptions);
 
         if (null === $this->cookies) {
-            $this->cookies = new GuzzleHttp\Cookie\FileCookieJar($this->container->getParameter('app_cookie_store'));
+            $this->cookies = new GuzzleHttp\Cookie\FileCookieJar($this->getContainer()->get('app_cookie_store'));
         }
 
         return $request->request($method, $url, $args + [
@@ -115,8 +115,8 @@ trait Http
                 '_origin' => $this->requestOptions['base_uri'] ?? 'https://vk.com',
                 'ip_h' => $ip_h,
                 'lg_h' => $lg_h,
-                'email' => $this->container->getParameter('login'),
-                'pass' => $this->container->getParameter('pass'),
+                'email' => $this->getContainer()->get('login'),
+                'pass' => $this->getContainer()->get('pass'),
                 'utf8' => 1,
                 'expire' => '',
                 'recaptcha' => '',
