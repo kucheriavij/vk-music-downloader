@@ -1,0 +1,4 @@
+params:
+    login: ''   # you VK login
+    pass: ''    # you VK password
+    uid: ''     # you VK uid
