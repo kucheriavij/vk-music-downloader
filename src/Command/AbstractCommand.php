@@ -9,16 +9,30 @@ use Symfony\Component\Console;
 use Bavix\AdvancedHtmlDom;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class AbstractCommand
+ *
+ * @package App\Command
+ */
 abstract class AbstractCommand extends Console\Command\Command
 {
     use Http;
 
+    /**
+     * AbstractCommand constructor.
+     *
+     * @param string|null $name
+     * @param ContainerInterface $container
+     */
     public function __construct(string $name = null, ContainerInterface $container)
     {
         parent::__construct($name);
         $this->container = $container;
     }
 
+    /**
+     * @var bool
+     */
     protected $overloadExistsTracks = false;
 
     /**
@@ -54,6 +68,10 @@ abstract class AbstractCommand extends Console\Command\Command
      */
     public $offset = 0;
 
+    /**
+     * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function checkAuth(): bool
     {
         if ($this->uid > 0) {
@@ -84,6 +102,9 @@ abstract class AbstractCommand extends Console\Command\Command
         return false;
     }
 
+    /**
+     * @param $content
+     */
     protected function setUid($content): void
     {
         if (!preg_match('~\s+id\s*:[^\d]*(\d+)\s*,~', $content, $matches)) {
@@ -100,8 +121,7 @@ abstract class AbstractCommand extends Console\Command\Command
      */
     protected function getParam($key)
     {
-        if(null === $this->container)
-        {
+        if (null === $this->container) {
             throw new \BadMethodCallException('conteiner is null');
         }
         /**
