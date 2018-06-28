@@ -2,7 +2,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     login: 'kucheriavij@gmail.com'                                  # you VK login
-    pass: 'A@vuJqyGG!jE'                                            # you VK password
+    pass: '4oA5@KfRTpIZ'                                            # you VK password
     uid: '11206850'                                                 # you VK uid
     app_cookie_store: '%kernel.project_dir%/var/cookie_storage.dat' # cookie_storage.dat
 
