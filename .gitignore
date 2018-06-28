@@ -1,6 +1,6 @@
 .idea/
 composer.lock
-config/services.yaml
+/config/services.yaml
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/
