@@ -2,9 +2,11 @@
 
 namespace App\Traits;
 
+use App\Service\Params;
 use GuzzleHttp;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Trait Http
@@ -21,6 +23,11 @@ trait Http
     protected $proxy = null;
 
     /**
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
      * @var GuzzleHttp\Cookie\FileCookieJar
      */
     protected $cookies;
@@ -32,19 +39,19 @@ trait Http
      * @return GuzzleHttp\Psr7\Response
      * @throws GuzzleHttp\Exception\GuzzleException
      */
-    private function request($method, string $url = '', array $args): GuzzleHttp\Psr7\Response
+    protected function httpRequest($method, string $url, array $args): GuzzleHttp\Psr7\Response
     {
         $request = new GuzzleHttp\Client($this->requestOptions);
 
         if (null === $this->cookies) {
-            $this->cookies = new GuzzleHttp\Cookie\FileCookieJar($this->getContainer()->get('app_cookie_store'));
+            $this->cookies = new GuzzleHttp\Cookie\FileCookieJar($this->getParam('app_cookie_store'));
         }
 
         return $request->request($method, $url, $args + [
-                'cookies' => $this->cookies,
-                'headers' => $this->defaultHeaders,
-                'proxy' => $this->proxy,
-            ]);
+            'cookies' => $this->cookies,
+            'headers' => $this->defaultHeaders,
+            'proxy' => $this->proxy,
+        ]);
     }
 
     /**
@@ -54,9 +61,9 @@ trait Http
      * @return StreamInterface
      * @throws GuzzleHttp\Exception\GuzzleException
      */
-    protected function post(string $url = '', ?array $data = null, ?array $headers = []): StreamInterface
+    protected function httpPost(string $url, ?array $data = null, ?array $headers = []): StreamInterface
     {
-        $response = $this->request('post', $url, [
+        $response = $this->httpRequest('post', $url, [
             'headers' => $headers + $this->defaultHeaders,
             'form_params' => $data,
         ]);
@@ -70,12 +77,12 @@ trait Http
      * @return StreamInterface
      * @throws GuzzleHttp\Exception\GuzzleException
      */
-    protected function get(string $url = '', ?array $headers = []): StreamInterface
+    protected function httpGet(string $url = '', ?array $headers = []): StreamInterface
     {
         /**
          * @var $response ResponseInterface
          */
-        $response = $this->request('get', $url, [
+        $response = $this->httpRequest('get', $url, [
             'headers' => $headers + $this->defaultHeaders,
         ]);
 
@@ -108,15 +115,15 @@ trait Http
      */
     protected function getAuthUrl(string $ip_h, string $lg_h)
     {
-        $checkAuth = $this->request('post', 'https://login.vk.com/?act=login', [
+        $checkAuth = $this->httpRequest('post', 'http://login.vk.com/?act=login', [
             'form_params' => [
                 'act' => 'login',
                 'role' => 'al_frame',
-                '_origin' => $this->requestOptions['base_uri'] ?? 'https://vk.com',
+                '_origin' => $this->requestOptions['base_uri'] ?? 'http://vk.com',
                 'ip_h' => $ip_h,
                 'lg_h' => $lg_h,
-                'email' => $this->getContainer()->get('login'),
-                'pass' => $this->getContainer()->get('pass'),
+                'email' => $this->getParam('login'),
+                'pass' => $this->getParam('pass'),
                 'utf8' => 1,
                 'expire' => '',
                 'recaptcha' => '',

@@ -1,5 +1,0 @@
-parameters:
-    login: ''                                                       # you VK login
-    pass: ''                                                        # you VK password
-    uid: ''                                                         # you VK uid
-    app_cookie_store: '%kernel.project_dir%/var/cookie_storage.dat' # cookie_storage.dat

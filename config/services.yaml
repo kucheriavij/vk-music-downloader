@@ -27,5 +27,11 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    params:
+        class: App\Service\Params
+        public: true
+        calls:
+            - [setContainer, ["@service_container"]]
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
