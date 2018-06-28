@@ -6,4 +6,5 @@ config/params.yaml
 /public/bundles/
 /var/
 /vendor/
+/symfony.lock
 ###< symfony/framework-bundle ###
