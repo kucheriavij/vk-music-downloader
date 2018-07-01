@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+
 use App\Service\Params;
 use GuzzleHttp;
 use Psr\Http\Message\ResponseInterface;
