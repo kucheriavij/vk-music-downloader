@@ -8,6 +8,7 @@ use App\Traits\Http;
 use Symfony\Component\Console;
 use Bavix\AdvancedHtmlDom;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class AbstractCommand
@@ -131,4 +132,24 @@ abstract class AbstractCommand extends Console\Command\Command
         return $params->getParameter($key);
     }
 
+    /**
+     * @param Console\Input\InputInterface $input
+     * @param Console\Output\OutputInterface $output
+     * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function login(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): bool
+    {
+        $checkAuth = $this->checkAuth();
+        $io = new SymfonyStyle($input, $output);
+
+        if ($checkAuth) {
+            $io->write('Login action success' . PHP_EOL);
+            return true;
+        }
+
+        $io->write('Login action failed' . PHP_EOL);
+
+        return false;
+    }
 }

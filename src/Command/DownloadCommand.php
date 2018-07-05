@@ -6,6 +6,7 @@ namespace App\Command;
 use App\Service\Params;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use YuruYuri\Vaud;
 
 /**
  * Class DownloadCommand
@@ -23,17 +24,22 @@ class DownloadCommand extends AbstractCommand
             ->setDescription('Download music');
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /**
-         * @var $params Params
-         */
-        $login = $this->getParam('login');
+        $q = $this->getVaud(5, 0);
+//        $output->writeln($q);
+    }
 
-        $output->writeln($login);
+    protected function getVaud(?int $limit = null, ?int $offset = null): array
+    {
+        $alAudio = new Vaud\AlAudio($this->getParam('uid'), $this->getCookiesAsArray());
+        $decoder = new Vaud\Decoder($this->getParam('uid'));
+
+        $limit = $limit ?? 0;
+        $offset = $offset ?? 0;
+
+        $alAudio->setLimitOffset($limit, $offset);
+
+        return [$alAudio, $decoder];
     }
 }
