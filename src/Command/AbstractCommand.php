@@ -5,6 +5,7 @@ namespace App\Command;
 
 use App\Service\Params;
 use App\Traits\Http;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console;
 use Bavix\AdvancedHtmlDom;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * @package App\Command
  */
-abstract class AbstractCommand extends Console\Command\Command
+abstract class AbstractCommand extends ContainerAwareCommand
 {
     use Http;
 

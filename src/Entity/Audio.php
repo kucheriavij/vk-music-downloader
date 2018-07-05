@@ -38,14 +38,29 @@ class Audio
     private $track_id;
 
     /**
+     * @var \DateTime $created_at
+     *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $created_at;
 
     /**
+     * @var \DateTime $updated_at
+     *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      */
     private $updated_at;
+
+    /**
+     * Audio constructor.
+     */
+    public function __construct()
+    {
+        $this->created_at = new \DateTime('NOW');
+        $this->updated_at = new \DateTime('NOW');
+    }
 
     /**
      * @return mixed
@@ -167,5 +182,14 @@ class Audio
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamp()
+    {
+        $this->setUpdatedAt(new \DateTime('NOW'));
     }
 }

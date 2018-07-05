@@ -3,6 +3,7 @@
 namespace App\Command;
 
 
+use App\Entity\Audio;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use YuruYuri\Vaud;
@@ -72,7 +73,19 @@ class DownloadCommand extends AbstractCommand
         $progressBar = new ProgressBar($output, $countItems);
 
         foreach ($alAudio->main() as $key => $value) {
+            $entityManager = $this->getContainer()->get('doctrine')->getManager();
+
+            $audio = new Audio();
+            $audio->setDownloaded(1);
+            $audio->setArtistName($value['artist']);
+            $audio->setTrackName($value['track']);
+            $audio->setTrackId($value['id']);
+
+            $entityManager->persist($audio);
+            $entityManager->flush();
+
             $result = $this->downloadAudio($value['id'], $decoder->decode($value['url']));
+
             $progressBar->advance();
         }
 
