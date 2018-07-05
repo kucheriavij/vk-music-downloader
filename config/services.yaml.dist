@@ -1,11 +1,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    login: ''                                                       # you VK login
-    pass: ''                                                        # you VK password
-    uid: ''                                                         # you VK uid
-    app_cookie_store: '%kernel.project_dir%/var/cookie_storage.dat' # cookie_storage.dat
-    download_path: '%kernel.project_dir%/public/download'           #download dir
+    login: '%env(VK_LOGIN)%'                                   # you VK login
+    pass: '%env(VK_PASSWORD)%'                                 # you VK password
+    uid: '%env(VK_UID)%'                                       # you VK uid
+    app_cookie_store: '%env(resolve:APP_COOKIE_STORE)%'        # cookie_storage.dat
+    download_path: '%env(resolve:DOWNLOAD_PATH)%'              # download dir
 
 services:
     # default configuration for services in *this* file

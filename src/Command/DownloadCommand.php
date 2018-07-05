@@ -3,10 +3,11 @@
 namespace App\Command;
 
 
-use App\Service\Params;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use YuruYuri\Vaud;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Class DownloadCommand
@@ -21,16 +22,27 @@ class DownloadCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('vk:download')
+            ->addArgument('limit', InputArgument::OPTIONAL, 'Limit audio', 0)
+            ->addArgument('offset', InputArgument::OPTIONAL, 'Offset audio list', 0)
             ->setDescription('Download music');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $q = $this->getVaud(5, 0);
-//        $output->writeln($q);
-        print_r($this->getAudio());
+        $output->writeln($this->getAudio($output, $input->getArgument('limit'), $input->getArgument('offset')));
     }
 
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array
+     */
     protected function getVaud(?int $limit = null, ?int $offset = null): array
     {
         $alAudio = new Vaud\AlAudio($this->getParam('uid'), $this->getCookiesAsArray());
@@ -44,17 +56,27 @@ class DownloadCommand extends AbstractCommand
         return [$alAudio, $decoder];
     }
 
-    protected function getAudio()
+    /**
+     * @param OutputInterface $output
+     * @param int $limit
+     * @param int $offset
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function getAudio(OutputInterface $output, $limit = 0, $offset = 0)
     {
         $this->checkAuth();
 
-        [$alAudio, $decoder] = $this->getVaud(5, 0);
+        [$alAudio, $decoder] = $this->getVaud($limit, $offset);
+
+        $countItems = count($alAudio->main());
+        $progressBar = new ProgressBar($output, $countItems);
 
         foreach ($alAudio->main() as $key => $value) {
             $result = $this->downloadAudio($value['id'], $decoder->decode($value['url']));
-
-            print_r($result);
+            $progressBar->advance();
         }
+
+        $progressBar->finish();
     }
 
     /**

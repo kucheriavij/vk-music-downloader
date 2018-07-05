@@ -123,7 +123,7 @@ abstract class AbstractCommand extends Console\Command\Command
     protected function getParam($key)
     {
         if (null === $this->container) {
-            throw new \BadMethodCallException('conteiner is null');
+            throw new \BadMethodCallException('Conteiner is null');
         }
         /**
          * @var $params Params
