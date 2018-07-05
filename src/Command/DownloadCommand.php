@@ -4,11 +4,11 @@ namespace App\Command;
 
 
 use App\Entity\Audio;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use YuruYuri\Vaud;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Class DownloadCommand
@@ -75,6 +75,11 @@ class DownloadCommand extends AbstractCommand
         foreach ($alAudio->main() as $key => $value) {
             if ($this->saveAudio($value)) {
                 $this->downloadAudio($value['id'], $decoder->decode($value['url']));
+
+                $clearedTrackName = trim($value['track']);
+                $clearedArtistName = trim($value['artist']);
+
+                $this->logger->info("Download audio: {$clearedArtistName} - {$clearedTrackName}.mp3");
 
                 $progressBar->advance();
             }

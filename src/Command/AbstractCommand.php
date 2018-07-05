@@ -5,11 +5,12 @@ namespace App\Command;
 
 use App\Service\Params;
 use App\Traits\Http;
+use Bavix\AdvancedHtmlDom;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console;
-use Bavix\AdvancedHtmlDom;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class AbstractCommand
@@ -21,15 +22,22 @@ abstract class AbstractCommand extends ContainerAwareCommand
     use Http;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * AbstractCommand constructor.
      *
      * @param string|null $name
      * @param ContainerInterface $container
+     * @param LoggerInterface $logger
      */
-    public function __construct(string $name = null, ContainerInterface $container)
+    public function __construct(string $name = null, ContainerInterface $container, LoggerInterface $logger)
     {
         parent::__construct($name);
         $this->container = $container;
+        $this->logger = $logger;
     }
 
     /**
