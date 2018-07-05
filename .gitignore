@@ -1,6 +1,7 @@
 .idea/
 composer.lock
 /config/services.yaml
+!/public/download/mp3/.gitignore
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/

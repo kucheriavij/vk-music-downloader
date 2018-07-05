@@ -26,8 +26,9 @@ class DownloadCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $q = $this->getVaud(5, 0);
+//        $q = $this->getVaud(5, 0);
 //        $output->writeln($q);
+        print_r($this->getAudio());
     }
 
     protected function getVaud(?int $limit = null, ?int $offset = null): array
@@ -41,5 +42,48 @@ class DownloadCommand extends AbstractCommand
         $alAudio->setLimitOffset($limit, $offset);
 
         return [$alAudio, $decoder];
+    }
+
+    protected function getAudio()
+    {
+        $this->checkAuth();
+
+        [$alAudio, $decoder] = $this->getVaud(5, 0);
+
+        foreach ($alAudio->main() as $key => $value) {
+            $result = $this->downloadAudio($value['id'], $decoder->decode($value['url']));
+
+            print_r($result);
+        }
+    }
+
+    /**
+     * @param $track_id
+     * @return string
+     */
+    protected function getTrackPath($track_id)
+    {
+        $downloadDir = $this->getParam('download_path') . '/mp3';
+
+        is_dir($downloadDir) || mkdir($downloadDir, 0777, true);
+
+        return $downloadDir . '/' . $track_id . '.mp3';
+    }
+
+    /**
+     * @param $track_id
+     * @param $track_url
+     * @return bool
+     */
+    protected function downloadAudio($track_id, $track_url)
+    {
+        $fileName = $this->getTrackPath($track_id);
+        $allowDownload = $this->overloadExistsTracks || !file_exists($fileName);
+
+        if ($allowDownload) {
+            return !!file_put_contents($fileName, @file_get_contents($track_url));
+        }
+
+        return true;
     }
 }

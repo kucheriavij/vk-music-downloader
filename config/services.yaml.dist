@@ -5,6 +5,7 @@ parameters:
     pass: ''                                                        # you VK password
     uid: ''                                                         # you VK uid
     app_cookie_store: '%kernel.project_dir%/var/cookie_storage.dat' # cookie_storage.dat
+    download_path: '%kernel.project_dir%/public/download'           #download dir
 
 services:
     # default configuration for services in *this* file
