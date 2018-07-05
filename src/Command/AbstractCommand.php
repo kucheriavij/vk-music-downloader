@@ -93,6 +93,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
         if ($htmlParser->find('#side_bar_inner #l_pr', 0)) {
             $this->setUid($indexPageContent);
+            $this->logger->info('Check auth success');
 
             return true;
         }
@@ -105,9 +106,12 @@ abstract class AbstractCommand extends ContainerAwareCommand
         if ($location) {
             $indexPageContent = $this->httpGet($location)->getContents();
             $this->setUid($indexPageContent);
+            $this->logger->info('Check auth success');
 
             return true;
         }
+
+        $this->logger->error('Check auth error');
 
         return false;
     }
@@ -134,10 +138,12 @@ abstract class AbstractCommand extends ContainerAwareCommand
         if (null === $this->container) {
             throw new \BadMethodCallException('Conteiner is null');
         }
+
         /**
          * @var $params Params
          */
         $params = $this->container->get('params')->get('params');
+
         return $params->getParameter($key);
     }
 
@@ -154,10 +160,13 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
         if ($checkAuth) {
             $io->write('Login action success' . PHP_EOL);
+            $this->logger->info('Login action success');
+
             return true;
         }
 
         $io->write('Login action failed' . PHP_EOL);
+        $this->logger->error('Login action failed');
 
         return false;
     }

@@ -108,8 +108,12 @@ class DownloadCommand extends AbstractCommand
             $entityManager->persist($audio);
             $entityManager->flush();
 
+            $this->logger->info('Audio entity not fount. Saving new entity.');
+
             return true;
         }
+
+        $this->logger->info('Audio entity exist. Skip.', $audio);
 
         return false;
     }
