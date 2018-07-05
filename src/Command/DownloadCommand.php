@@ -73,23 +73,40 @@ class DownloadCommand extends AbstractCommand
         $progressBar = new ProgressBar($output, $countItems);
 
         foreach ($alAudio->main() as $key => $value) {
-            $entityManager = $this->getContainer()->get('doctrine')->getManager();
+            if ($this->saveAudio($value)) {
+                $this->downloadAudio($value['id'], $decoder->decode($value['url']));
 
+                $progressBar->advance();
+            }
+        }
+
+        $progressBar->finish();
+    }
+
+    /**
+     * @param $track
+     * @return bool
+     */
+    protected function saveAudio($track): bool
+    {
+        $entityManager = $this->getContainer()->get('doctrine')->getManager();
+
+        $audio = $entityManager->getRepository(Audio::class)->findBy(['track_id' => $track['id']]);
+
+        if (!$audio) {
             $audio = new Audio();
             $audio->setDownloaded(1);
-            $audio->setArtistName($value['artist']);
-            $audio->setTrackName($value['track']);
-            $audio->setTrackId($value['id']);
+            $audio->setArtistName($track['artist']);
+            $audio->setTrackName($track['track']);
+            $audio->setTrackId($track['id']);
 
             $entityManager->persist($audio);
             $entityManager->flush();
 
-            $result = $this->downloadAudio($value['id'], $decoder->decode($value['url']));
-
-            $progressBar->advance();
+            return true;
         }
 
-        $progressBar->finish();
+        return false;
     }
 
     /**

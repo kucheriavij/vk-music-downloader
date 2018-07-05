@@ -40,7 +40,6 @@ class Audio
     /**
      * @var \DateTime $created_at
      *
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -48,7 +47,6 @@ class Audio
     /**
      * @var \DateTime $updated_at
      *
-     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      */
     private $updated_at;
