@@ -24,7 +24,7 @@ class DownloadCommand extends AbstractCommand
     {
         $this->setName('vk:download')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit audio', 0)
-            ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset audio list', 0)
+//            ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset audio list', 0)
             ->addOption('uid', 'u', InputOption::VALUE_OPTIONAL, 'VK user id', false)
             ->setDescription('Download music');
     }
@@ -43,7 +43,8 @@ class DownloadCommand extends AbstractCommand
             $uid = $this->getParam('uid');
         }
 
-        $output->writeln($this->getAudio($output, $input->getOption('limit'), $input->getOption('offset'), $uid));
+//        $output->writeln($this->getAudio($output, $input->getOption('limit'), $input->getOption('offset'), $uid));
+        $output->writeln($this->getAudio($output, $input->getOption('limit'), 0, $uid));
     }
 
     /**
