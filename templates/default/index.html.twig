@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello {{ vk_login }}!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col"><h1 style="text-align: center;">Audio list for {{ vk_login }}</h1></div>
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">id</th>
+                    <th scope="col">Artist</th>
+                    <th scope="col">Track</th>
+                    <th scope="col">Track id</th>
+                    <th scope="col">VK user id</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for track in audio %}
+                    <tr>
+                        <td scope="row">{{ loop.index }}</td>
+                        <td>{{ track.id }}</td>
+                        <td>{{ track.artistName }}</td>
+                        <td>{{ track.trackName }}</td>
+                        <td>{{ track.trackId }}</td>
+                        <td>{{ track.uid }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
