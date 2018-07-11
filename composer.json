@@ -15,6 +15,7 @@
         "bavix/advanced-html-dom": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "sensio/framework-extra-bundle": "^5.2",
+        "symfony/asset": "^4.1",
         "symfony/console": "^4.1",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.1",
