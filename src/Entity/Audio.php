@@ -52,6 +52,16 @@ class Audio
     private $updated_at;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $uid;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $file_path;
+
+    /**
      * Audio constructor.
      */
     public function __construct()
@@ -189,5 +199,43 @@ class Audio
     public function updateTimestamp()
     {
         $this->setUpdatedAt(new \DateTime('NOW'));
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getUid(): ?int
+    {
+        return $this->uid;
+    }
+
+    /**
+     * @param int $uid
+     * @return Audio
+     */
+    public function setUid(int $uid): self
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFilePath(): ?string
+    {
+        return $this->file_path;
+    }
+
+    /**
+     * @param string $file_path
+     * @return Audio
+     */
+    public function setFilePath(string $file_path): self
+    {
+        $this->file_path = $file_path;
+
+        return $this;
     }
 }
