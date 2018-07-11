@@ -82,7 +82,7 @@ class DownloadCommand extends AbstractCommand
         $progressBar = new ProgressBar($output, $countItems);
 
         foreach ($alAudio->main() as $key => $value) {
-            if ($this->saveAudio($value)) {
+            if ($this->saveAudio($value, $uid)) {
                 $this->downloadAudio($value['id'], $decoder->decode($value['url']), $uid);
 
                 $clearedTrackName = trim($value['track']);
@@ -99,9 +99,10 @@ class DownloadCommand extends AbstractCommand
 
     /**
      * @param $track
+     * @param $uid
      * @return bool
      */
-    protected function saveAudio($track): bool
+    protected function saveAudio($track, $uid): bool
     {
         $entityManager = $this->getContainer()->get('doctrine')->getManager();
 
@@ -113,6 +114,8 @@ class DownloadCommand extends AbstractCommand
             $audio->setArtistName($track['artist']);
             $audio->setTrackName($track['track']);
             $audio->setTrackId($track['id']);
+            $audio->setUid($uid);
+            $audio->setFilePath("/download/mp3/{$uid}/{$track['id']}.mp3");
 
             $entityManager->persist($audio);
             $entityManager->flush();
