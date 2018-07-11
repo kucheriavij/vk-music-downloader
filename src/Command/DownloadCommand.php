@@ -5,8 +5,8 @@ namespace App\Command;
 
 use App\Entity\Audio;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use YuruYuri\Vaud;
 
@@ -23,8 +23,9 @@ class DownloadCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('vk:download')
-            ->addArgument('limit', InputArgument::OPTIONAL, 'Limit audio', 0)
-            ->addArgument('offset', InputArgument::OPTIONAL, 'Offset audio list', 0)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit audio', 0)
+            ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset audio list', 0)
+            ->addOption('uid', 'u', InputOption::VALUE_OPTIONAL, 'VK user id', false)
             ->setDescription('Download music');
     }
 
@@ -36,17 +37,24 @@ class DownloadCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln($this->getAudio($output, $input->getArgument('limit'), $input->getArgument('offset')));
+        if (!$input->getOption('uid')) {
+            $uid = $this->getParam('uid');
+        } else {
+            $uid = $input->getOption('uid');
+        }
+
+        $output->writeln($this->getAudio($output, $input->getOption('limit'), $input->getOption('offset'), $uid));
     }
 
     /**
      * @param int|null $limit
      * @param int|null $offset
+     * @param int|null $uid
      * @return array
      */
-    protected function getVaud(?int $limit = null, ?int $offset = null): array
+    protected function getVaud(?int $limit = null, ?int $offset = null, ?int $uid): array
     {
-        $alAudio = new Vaud\AlAudio($this->getParam('uid'), $this->getCookiesAsArray());
+        $alAudio = new Vaud\AlAudio($uid, $this->getCookiesAsArray());
         $decoder = new Vaud\Decoder($this->getParam('uid'));
 
         $limit = $limit ?? 0;
@@ -61,20 +69,21 @@ class DownloadCommand extends AbstractCommand
      * @param OutputInterface $output
      * @param int $limit
      * @param int $offset
+     * @param int|null $uid
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function getAudio(OutputInterface $output, $limit = 0, $offset = 0)
+    protected function getAudio(OutputInterface $output, $limit = 0, $offset = 0, ?int $uid)
     {
         $this->checkAuth();
 
-        [$alAudio, $decoder] = $this->getVaud($limit, $offset);
+        [$alAudio, $decoder] = $this->getVaud($limit, $offset, $uid);
 
         $countItems = count($alAudio->main());
         $progressBar = new ProgressBar($output, $countItems);
 
         foreach ($alAudio->main() as $key => $value) {
             if ($this->saveAudio($value)) {
-                $this->downloadAudio($value['id'], $decoder->decode($value['url']));
+                $this->downloadAudio($value['id'], $decoder->decode($value['url']), $uid);
 
                 $clearedTrackName = trim($value['track']);
                 $clearedArtistName = trim($value['artist']);
@@ -120,11 +129,12 @@ class DownloadCommand extends AbstractCommand
 
     /**
      * @param $track_id
+     * @param $uid
      * @return string
      */
-    protected function getTrackPath($track_id)
+    protected function getTrackPath($track_id, $uid)
     {
-        $downloadDir = $this->getParam('download_path') . '/mp3';
+        $downloadDir = $this->getParam('download_path') . '/mp3/' . $uid;
 
         is_dir($downloadDir) || mkdir($downloadDir, 0777, true);
 
@@ -134,11 +144,12 @@ class DownloadCommand extends AbstractCommand
     /**
      * @param $track_id
      * @param $track_url
+     * @param $uid
      * @return bool
      */
-    protected function downloadAudio($track_id, $track_url)
+    protected function downloadAudio($track_id, $track_url, $uid)
     {
-        $fileName = $this->getTrackPath($track_id);
+        $fileName = $this->getTrackPath($track_id, $uid);
         $allowDownload = $this->overloadExistsTracks || !file_exists($fileName);
 
         if ($allowDownload) {
