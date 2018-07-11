@@ -52,12 +52,12 @@ class Audio
     private $updated_at;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $uid;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $file_path;
 
@@ -210,10 +210,10 @@ class Audio
     }
 
     /**
-     * @param int $uid
+     * @param int|null $uid
      * @return Audio
      */
-    public function setUid(int $uid): self
+    public function setUid(?int $uid): self
     {
         $this->uid = $uid;
 
@@ -229,10 +229,10 @@ class Audio
     }
 
     /**
-     * @param string $file_path
+     * @param null|string $file_path
      * @return Audio
      */
-    public function setFilePath(string $file_path): self
+    public function setFilePath(?string $file_path): self
     {
         $this->file_path = $file_path;
 
