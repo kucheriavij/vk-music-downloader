@@ -37,10 +37,10 @@ class DownloadCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $uid = $input->getOption('uid');
+
         if (!$input->getOption('uid')) {
             $uid = $this->getParam('uid');
-        } else {
-            $uid = $input->getOption('uid');
         }
 
         $output->writeln($this->getAudio($output, $input->getOption('limit'), $input->getOption('offset'), $uid));
