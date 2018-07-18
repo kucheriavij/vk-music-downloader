@@ -17,6 +17,7 @@
                     <th scope="col">Track</th>
                     <th scope="col">Track id</th>
                     <th scope="col">VK user id</th>
+                    <th scope="col">Controls</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,13 @@
                         <td>{{ track.trackName }}</td>
                         <td>{{ track.trackId }}</td>
                         <td>{{ track.uid }}</td>
+                        <td>
+                            <div class="buttons">
+                                <a class="buttons__btn" href="{{ path('audio_delete', {id: track.id}) }}" title="Delete audio"><i class="fas fa-trash-alt"></i></a>
+                                <a class="buttons__btn" href="{{ path('audio_download', {id: track.id}) }}" title="Download audio"><i class="fas fa-download"></i></a>
+                            </div>
+                            <audio class="audio-controls" src="{{ track.filePath }}" controls></audio>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

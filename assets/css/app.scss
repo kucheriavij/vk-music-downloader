@@ -1,1 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
+
+.buttons__btn {
+  margin-right: 15px;
+}
+
+.buttons, .audio-controls {
+  display: inline-block;
+  vertical-align: middle;
+}
