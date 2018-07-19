@@ -47,8 +47,6 @@ vk:download command options:
 --uid vk user id from download audios (if audios open in privacy)
 ```
 
-##GUI
-
 If you want to see the list of downloaded audio...
 
 Install nodejs from https://nodejs.org/en/
