@@ -2,6 +2,7 @@
 composer.lock
 /config/services.yaml
 !/public/download/mp3/.gitignore
+yarn.lock
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/
