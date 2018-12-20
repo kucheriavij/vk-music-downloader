@@ -79,6 +79,8 @@ abstract class AbstractCommand extends ContainerAwareCommand
     public $offset = 0;
 
     /**
+     * проверка авторизации
+     *
      * @return bool
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
